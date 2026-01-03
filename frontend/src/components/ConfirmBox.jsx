@@ -30,23 +30,23 @@ export function ConfirmBox({ data, onConfirm, onCancel }) {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-lg">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
+    <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+      <h3 className="text-lg font-medium text-bank-blue mb-3">
         {title}
       </h3>
-      <p className="text-gray-600 dark:text-gray-400 mb-6 whitespace-pre-wrap">
+      <p className="text-gray-600 mb-6 whitespace-pre-wrap">
         {message}
       </p>
       <div className="flex items-center justify-end space-x-3">
         <button
           onClick={handleCancel}
-          className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
+          className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
         >
           {cancelText}
         </button>
         <button
           onClick={handleConfirm}
-          className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium shadow-sm"
+          className="px-6 py-2 bg-bank-blue hover:bg-bank-blue/90 text-white rounded-lg transition-colors font-medium shadow-sm"
         >
           {confirmText}
         </button>

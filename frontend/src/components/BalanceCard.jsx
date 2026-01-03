@@ -22,24 +22,24 @@ export function BalanceCard({ data }) {
   };
 
   return (
-    <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl p-6 shadow-lg text-white">
+    <div className="bg-gradient-to-br from-bank-blue to-bank-blue/90 rounded-lg p-6 shadow-sm border border-gray-200 text-white">
       <div className="flex items-start justify-between mb-4">
         <div>
-          <p className="text-blue-100 text-sm mb-1">卡类型</p>
-          <p className="text-xl font-bold">{cardType || '标准卡'}</p>
+          <p className="text-white/80 text-sm mb-1">卡类型</p>
+          <p className="text-xl font-medium">{cardType || '标准卡'}</p>
         </div>
       </div>
       
       <div className="mb-6">
-        <p className="text-blue-100 text-sm mb-2">卡號</p>
+        <p className="text-white/80 text-sm mb-2">卡號</p>
         <p className="text-lg font-mono tracking-wider">
           {maskCardNumber(cardNumber)}
         </p>
       </div>
       
-      <div className="border-t border-blue-400/30 pt-4">
-        <p className="text-blue-100 text-sm mb-2">可用余额</p>
-        <p className="text-4xl font-bold">
+      <div className="border-t border-white/20 pt-4">
+        <p className="text-white/80 text-sm mb-2">可用余额</p>
+        <p className="text-4xl font-medium">
           {balance !== undefined && balance !== null 
             ? formatCurrency(balance)
             : 'N/A'}

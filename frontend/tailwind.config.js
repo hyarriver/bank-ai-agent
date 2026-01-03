@@ -5,7 +5,14 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'bank-blue': '#004B91',
+      },
+      backgroundColor: {
+        'app-bg': '#F8FAFC',
+      },
+    },
   },
   plugins: [],
 }

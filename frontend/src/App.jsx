@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useWebSocket } from './hooks/useWebSocket';
 import { MessageRenderer } from './components/MessageRenderer';
-import { Send, Wifi, WifiOff } from 'lucide-react';
+import { Send, Wifi, WifiOff, Wallet, ArrowRightLeft, MessageCircle } from 'lucide-react';
 
 /**
  * 获取 WebSocket URL，自动处理 ws/wss 协议切换
@@ -155,20 +155,35 @@ function App() {
     return message;
   });
 
+  // 快捷操作按钮处理
+  const handleQuickAction = (action) => {
+    const actionMessages = {
+      balance: '查余额',
+      transfer: '转账',
+      consult: '咨询',
+    };
+    if (isConnected) {
+      sendMessage({
+        type: 'user',
+        content: actionMessages[action] || action,
+      });
+    }
+  };
+
   return (
-    <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex flex-col h-screen bg-app-bg">
       {/* 顶部状态栏 */}
-      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
-        <div className="flex items-center justify-between">
+      <header className="bg-white border-b border-gray-200 px-6 py-4">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">銀</span>
+            <div className="w-10 h-10 bg-bank-blue rounded-lg flex items-center justify-center">
+              <Wallet className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+              <h1 className="text-xl font-medium text-bank-blue">
                 银行智能助手
               </h1>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-gray-500">
                 专业金融服务咨询
               </p>
             </div>
@@ -177,35 +192,35 @@ function App() {
             {isConnected ? (
               <>
                 <Wifi className="w-5 h-5 text-green-500" />
-                <span className="text-sm text-green-600 dark:text-green-400">已连接</span>
+                <span className="text-sm text-green-600">已连接</span>
               </>
             ) : (
               <>
                 <WifiOff className="w-5 h-5 text-red-500" />
-                <span className="text-sm text-red-600 dark:text-red-400">未连接</span>
+                <span className="text-sm text-red-600">未连接</span>
               </>
             )}
           </div>
         </div>
         {error && (
-          <div className="mt-3 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-            <p className="text-sm text-red-800 dark:text-red-200">{error}</p>
+          <div className="max-w-4xl mx-auto mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-sm text-red-800">{error}</p>
           </div>
         )}
       </header>
 
       {/* 消息列表区域 */}
       <main className="flex-1 overflow-y-auto px-6 py-6">
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-4">
           {displayMessages.length === 0 ? (
             <div className="text-center py-12">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-3xl">💬</span>
+              <div className="w-16 h-16 bg-bank-blue/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Wallet className="w-8 h-8 text-bank-blue" />
               </div>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+              <h2 className="text-xl font-medium text-bank-blue mb-2">
                 开始对话
               </h2>
-              <p className="text-gray-500 dark:text-gray-400">
+              <p className="text-gray-500">
                 输入您的问题，我们的智能助手将为您提供专业的金融服务
               </p>
             </div>
@@ -218,10 +233,39 @@ function App() {
         </div>
       </main>
 
-      {/* 输入框区域 */}
-      <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-6 py-4">
+      {/* 悬浮输入框区域 */}
+      <footer className="bg-white border-t border-gray-200 px-6 py-4">
         <div className="max-w-4xl mx-auto">
-          <form onSubmit={handleSend} className="flex items-end space-x-4">
+          {/* 快捷操作按钮 */}
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <button
+              onClick={() => handleQuickAction('balance')}
+              disabled={!isConnected}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-bank-blue bg-bank-blue/5 hover:bg-bank-blue/10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200"
+            >
+              <Wallet className="w-4 h-4" />
+              查余额
+            </button>
+            <button
+              onClick={() => handleQuickAction('transfer')}
+              disabled={!isConnected}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-bank-blue bg-bank-blue/5 hover:bg-bank-blue/10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200"
+            >
+              <ArrowRightLeft className="w-4 h-4" />
+              转账
+            </button>
+            <button
+              onClick={() => handleQuickAction('consult')}
+              disabled={!isConnected}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-bank-blue bg-bank-blue/5 hover:bg-bank-blue/10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200"
+            >
+              <MessageCircle className="w-4 h-4" />
+              咨询
+            </button>
+          </div>
+          
+          {/* 输入框 */}
+          <form onSubmit={handleSend} className="flex items-end gap-3">
             <div className="flex-1">
               <textarea
                 ref={inputRef}
@@ -231,7 +275,7 @@ function App() {
                 placeholder="输入您的问题... (按 Enter 发送，Shift+Enter 换行)"
                 rows={1}
                 disabled={!isConnected}
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-bank-blue focus:border-bank-blue resize-none bg-white text-gray-900 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                 style={{
                   minHeight: '48px',
                   maxHeight: '200px',
@@ -245,13 +289,13 @@ function App() {
             <button
               type="submit"
               disabled={!inputValue.trim() || !isConnected}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors duration-200 flex items-center space-x-2 shadow-sm"
+              className="px-6 py-3 bg-bank-blue hover:bg-bank-blue/90 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors duration-200 flex items-center gap-2 shadow-sm font-medium"
             >
               <Send className="w-5 h-5" />
               <span>发送</span>
             </button>
           </form>
-          <p className="mt-2 text-xs text-gray-500 dark:text-gray-400 text-center">
+          <p className="mt-2 text-xs text-gray-500 text-center">
             银行级安全保障 | 您的隐私受到保护
           </p>
         </div>
@@ -269,13 +313,20 @@ function MessageBubble({ message }) {
 
   return (
     <div
-      className={`flex ${isUser ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-300`}
+      className={`flex ${isUser ? 'justify-end' : 'justify-start'} items-start gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300`}
     >
+      {/* 機器人頭像 */}
+      {!isUser && (
+        <div className="w-8 h-8 bg-bank-blue rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+          <Wallet className="w-5 h-5 text-white" />
+        </div>
+      )}
+      
       <div
-        className={`max-w-3xl rounded-2xl px-5 py-4 shadow-sm ${
+        className={`max-w-3xl rounded-lg px-4 py-3 shadow-sm ${
           isUser
-            ? 'bg-blue-600 text-white'
-            : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700'
+            ? 'bg-bank-blue text-white'
+            : 'bg-white text-gray-900 border border-gray-200'
         }`}
       >
         {isUser ? (

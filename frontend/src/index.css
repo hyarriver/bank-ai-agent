@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+/* 全局字體設置 - 系統默認無襯線字體 */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 確保數字顯示清晰 */
+* {
+  font-variant-numeric: tabular-nums;
+}
