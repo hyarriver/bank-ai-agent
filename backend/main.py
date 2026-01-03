@@ -25,10 +25,15 @@ QWEN_BASE_URL = os.getenv("QWEN_BASE_URL", "https://dashscope.aliyuncs.com/compa
 
 client = None
 if QWEN_API_KEY:
-    client = OpenAI(
-        api_key=QWEN_API_KEY,
-        base_url=QWEN_BASE_URL
-    )
+    try:
+        client = OpenAI(
+            api_key=QWEN_API_KEY,
+            base_url=QWEN_BASE_URL,
+            timeout=60.0
+        )
+    except Exception as e:
+        print(f"初始化 OpenAI 客户端失败: {e}")
+        client = None
 
 # 系统提示词
 SYSTEM_PROMPT = """你是一个银行 AI 助手。请以 JSON 格式回复用户的问题。
