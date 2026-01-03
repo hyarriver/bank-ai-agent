@@ -14,12 +14,15 @@ function getWebSocketUrl() {
   if (envUrl) {
     // 如果环境变量是完整 URL（包含协议），直接返回
     if (envUrl.startsWith('ws://') || envUrl.startsWith('wss://')) {
+      console.log('使用环境变量中的完整 WebSocket URL:', envUrl);
       return envUrl;
     }
     // 如果环境变量只是路径，需要根据当前协议构建完整 URL
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const host = window.location.host;
-    return `${protocol}//${host}${envUrl.startsWith('/') ? envUrl : '/' + envUrl}`;
+    const fullUrl = `${protocol}//${host}${envUrl.startsWith('/') ? envUrl : '/' + envUrl}`;
+    console.log('从环境变量路径构建 WebSocket URL:', fullUrl);
+    return fullUrl;
   }
   
   // 默认情况下，根据当前页面协议和开发/生产环境自动选择
@@ -27,12 +30,16 @@ function getWebSocketUrl() {
   
   // 开发环境：使用 localhost:8000（后端默认端口）
   if (import.meta.env.DEV) {
-    return `${protocol}//localhost:8000/ws/chat`;
+    const devUrl = `${protocol}//localhost:8000/ws/chat`;
+    console.log('开发环境 WebSocket URL:', devUrl);
+    return devUrl;
   }
   
   // 生产环境：使用当前域名
   const host = window.location.host;
-  return `${protocol}//${host}/ws/chat`;
+  const prodUrl = `${protocol}//${host}/ws/chat`;
+  console.log('生产环境 WebSocket URL:', prodUrl);
+  return prodUrl;
 }
 
 function App() {

@@ -58,24 +58,35 @@ export function useWebSocket(url, options = {}) {
         }
       };
 
-      ws.onerror = () => {
-        console.error('WebSocket 错误');
-        setError('WebSocket 连接错误');
+      ws.onerror = (error) => {
+        console.error('WebSocket 错误:', error);
+        console.error('WebSocket URL:', currentUrl);
+        console.error('WebSocket readyState:', ws.readyState);
+        setError(`WebSocket 连接错误: ${currentUrl}`);
       };
 
-      ws.onclose = () => {
+      ws.onclose = (event) => {
         setIsConnected(false);
         wsRef.current = null;
+        
+        console.log('WebSocket 连接关闭:', {
+          code: event.code,
+          reason: event.reason,
+          wasClean: event.wasClean,
+          url: currentUrl
+        });
 
         // 自动重连逻辑
         if (reconnectAttemptsRef.current < maxReconnectAttempts) {
           reconnectAttemptsRef.current += 1;
           reconnectTimeoutRef.current = setTimeout(() => {
-            console.log(`尝试重连 (${reconnectAttemptsRef.current}/${maxReconnectAttempts})`);
+            console.log(`尝试重连 (${reconnectAttemptsRef.current}/${maxReconnectAttempts}): ${currentUrl}`);
             connectInternal();
           }, reconnectDelay);
         } else {
-          setError('WebSocket 连接失败，已达到最大重连次数');
+          const errorMsg = `WebSocket 连接失败，已达到最大重连次数。URL: ${currentUrl}`;
+          console.error(errorMsg);
+          setError(errorMsg);
         }
       };
     } catch (err) {
