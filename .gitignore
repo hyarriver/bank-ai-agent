@@ -39,3 +39,9 @@ dist/
 build/
 *.egg-info/
 
+# Large files
+*.mp4
+*.mov
+*.avi
+viedo/
+
